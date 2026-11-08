@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S5 Guide — Zero to Hero</title>
+<meta name="description" content="S5 English Studies (Linguistics) study guide: lessons, quizzes, exercises and a study plan for every module.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
+  <a href="#/" class="brand"><span class="logo">S5</span><span>Guide <small>zero → hero</small></span></a>
+  <div class="top-actions">
+    <input id="globalSearch" type="search" placeholder="Search lessons & terms…" aria-label="Search">
+    <button id="themeBtn" class="icon-btn" aria-label="Toggle dark mode">◐</button>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="sidebar" id="sidebar" aria-label="Main">
+    <div class="nav-group">
+      <a href="#/" data-route="home">🏠 Dashboard</a>
+      <a href="#/plan" data-route="plan">🗺️ Study plan</a>
+      <a href="#/timetable" data-route="timetable">🗓️ Timetable & dates</a>
+      <a href="#/glossary" data-route="glossary">📖 Glossary</a>
+      <a href="#/exam" data-route="exam">📝 Exam method</a>
+    </div>
+    <div class="nav-label">Modules</div>
+    <div class="nav-group" id="moduleNav"></div>
+    <div class="nav-foot">Progress is saved in this browser.<br><button id="resetBtn" class="link-btn">Reset progress</button></div>
+  </nav>
+  <main id="app" tabindex="-1"></main>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
