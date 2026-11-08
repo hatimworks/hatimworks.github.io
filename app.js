@@ -5,6 +5,8 @@
   const order = ["morphology", "phonology", "syntax", "semantics", "tta", "digital", "arabic"];
   D.modules.sort((a, b) => order.indexOf(a.id) - order.indexOf(b.id));
   const modById = Object.fromEntries(D.modules.map(m => [m.id, m]));
+  const COLORS = { morphology: "#f97316", phonology: "#06b6d4", syntax: "#22c55e", semantics: "#eab308", tta: "#a855f7", digital: "#3b82f6", arabic: "#ef4444" };
+  D.modules.forEach(m => m.color = COLORS[m.id] || "#6366f1");
 
   /* ---------- storage (safe) ---------- */
   const KEY = "s5guide.v2";
@@ -109,16 +111,19 @@
 
   /* ---------- sidebar ---------- */
   function renderNav() {
-    $("#moduleNav").innerHTML = D.modules.map(m => `<a href="#/m/${m.id}" data-route="m/${m.id}">${m.icon} ${esc(m.name)}<span class="mini">${modProgress(m).pct}%</span></a>`).join("");
+    $("#moduleNav").innerHTML = D.modules.map(m => `<a href="#/m/${m.id}" data-route="m/${m.id}" style="--c:${m.color}">${m.icon} ${esc(m.name)}<span class="mini">${modProgress(m).pct}%</span></a>`).join("");
     const r = location.hash.replace(/^#\/?/, "") || "home";
-    document.querySelectorAll(".sidebar a").forEach(a => {
+    document.querySelectorAll(".sidebar a, .tabbar a").forEach(a => {
       const route = a.dataset.route;
-      a.classList.toggle("active", route === r || (route !== "home" && r.startsWith(route)));
+      a.classList.toggle("active", route === r || (route !== "home" && r.startsWith(route)) || (route === "modules" && a.closest(".tabbar") && r.startsWith("m/")));
     });
     $("#groupSel").value = state.group || "";
   }
-  $("#menuBtn").onclick = () => $("#sidebar").classList.toggle("open");
-  $("#sidebar").addEventListener("click", e => { if (e.target.closest("a")) $("#sidebar").classList.remove("open"); });
+  const toggleMenu = open => { $("#sidebar").classList.toggle("open", open); $("#scrim").hidden = !$("#sidebar").classList.contains("open"); };
+  $("#menuBtn").onclick = () => toggleMenu();
+  $("#moreBtn").onclick = () => toggleMenu();
+  $("#scrim").onclick = () => toggleMenu(false);
+  $("#sidebar").addEventListener("click", e => { if (e.target.closest("a")) toggleMenu(false); });
   $("#groupSel").onchange = e => { state.group = e.target.value || null; save(); route(); };
   $("#resetBtn").onclick = () => { if (confirm("Reset all your progress (lessons, quizzes, plan)?")) { state.lessons = {}; state.quiz = {}; state.plan = {}; save(); route(); } };
 
@@ -128,48 +133,66 @@
       <div><button class="btn" data-setgroup="g1">Group 1</button> <button class="btn" data-setgroup="g2">Group 2</button></div></div>`;
   }
 
+  function moduleGrid() {
+    return `<div class="mgrid">${D.modules.map((m, k) => {
+      const p = modProgress(m); const best = state.quiz[m.id];
+      const nv = new Set([...m.videos, ...m.lessons.flatMap(l => l.v || [])].map(v => v[0])).size;
+      return `<a class="mcard" href="#/m/${m.id}" style="--c:${m.color};--d:${k * 60}ms">
+        <span class="mc-ic">${m.icon}</span>
+        <span class="mc-body"><b>${esc(m.name)}</b>
+          <small>${m.lessons.length} lessons · ${nv} videos · ${m.quiz.length} quiz Qs</small>
+          <span class="bar"><i style="width:${p.pct}%"></i></span>
+          <small class="mc-foot">${p.pct ? p.pct + "% learned" : "Not started"}${best != null ? " · quiz " + best + "%" : ""}</small></span>
+        <span class="mc-go">→</span></a>`;
+    }).join("")}</div>`;
+  }
+
   function home() {
     const pct = overall();
-    const upcoming = D.keyDates.filter(forGroup).map(k => ({ ...k, n: daysUntil(k.date) })).filter(k => k.n >= -1).sort((a, b) => a.n - b.n);
-    const rec = D.recurring.filter(forGroup);
-    const firstOpen = D.plan.flatMap((ph, pi) => ph.items.map((it, ii) => ({ it, k: pi + ":" + ii }))).filter(x => !state.plan[x.k]).slice(0, 5);
+    const nL = D.modules.reduce((n, m) => n + m.lessons.length, 0);
+    const nQ = D.modules.reduce((n, m) => n + m.quiz.length, 0);
+    const nV = new Set(D.modules.flatMap(m => [...m.videos, ...m.lessons.flatMap(l => l.v || [])]).map(v => v[0])).size;
+    const quick = [
+      ["#/plan", "🗺️", "Study plan", "From zero to exam-ready, step by step"],
+      ["#/timetable", "🗓️", "Timetable", "Your classes, rooms and professors"],
+      ["#/glossary", "📖", "Glossary", G.length + " key terms with links"],
+      ["#/exam", "🏆", "Top-marks method", "How to answer every question type"],
+      ["#/about", "ℹ️", "About", "How this guide was made"]
+    ];
     return `
       ${state.group ? "" : groupPicker()}
       <section class="hero">
-        <div>
-          <span class="pill">${esc(D.programme)}${state.group ? " · " + D.groups[state.group].label : ""}</span>
-          <h1>Missed the semester? Start here. 🚀</h1>
-          <p class="lead">A complete, free guide for S5 Linguistics students: every module explained from zero, with videos (Moroccan educators first), clickable key terms, quizzes, exercises with model answers, and a study plan. Tick lessons as you learn them and watch the ring fill.</p>
-          <a class="btn" href="#/plan">Start the study plan →</a>
-          <a class="btn ghost" href="#/exam">How to get top marks</a>
-          <button class="btn ghost" id="shareBtn">🔗 Share with your class</button>
+        <div class="hero-text">
+          <span class="pill glass">${esc(D.programme)}${state.group ? " · " + D.groups[state.group].label : ""}</span>
+          <h1>Missed the semester?<br><span class="grad">Start here.</span> <span class="wave">🚀</span></h1>
+          <p class="lead">Every S5 Linguistics module explained from zero, with videos (Moroccan educators first), clickable key terms, quizzes and exercises with model answers.</p>
+          <div class="hero-btns">
+            <a class="btn big" href="#/modules">Explore the modules →</a>
+            <button class="btn ghost big" id="shareBtn">🔗 Share with your class</button>
+          </div>
         </div>
-        <div class="ring" style="--p:${pct}"><span>${pct}%</span></div>
+        <div class="ring" style="--p:${pct}"><span>${pct}%<small>learned</small></span></div>
       </section>
 
-      <h2>⏰ Deadlines</h2>
-      <div class="card">${upcoming.map(k => {
-        const f = fmtDay(k.date); const m = modById[k.module];
-        const lbl = k.n < 0 ? "passed" : k.n === 0 ? "TODAY" : k.n === 1 ? "tomorrow" : `in ${k.n} days`;
-        return `<div class="date-row"><div class="date-box"><small>${f.m}</small><b>${f.d}</b><small>${f.w}</small></div>
-          <div><b>${esc(k.label)}</b><br><a href="#/m/${m.id}">${m.icon} ${esc(m.name)}</a></div>
-          <span class="pill days ${k.n <= 7 ? "urgent" : ""}">${lbl}</span></div>`;
-      }).join("")}
-      ${rec.map(r => `<div class="date-row"><div class="date-box"><b>↻</b><small>weekly</small></div><div>${esc(r.label)}</div></div>`).join("")}</div>
+      <div class="stats">
+        <div><b>${D.modules.length}</b><span>modules</span></div>
+        <div><b>${nL}</b><span>lessons</span></div>
+        <div><b>${nV}</b><span>videos</span></div>
+        <div><b>${nQ}</b><span>quiz questions</span></div>
+        <div><b>${G.length}</b><span>key terms</span></div>
+      </div>
 
-      <h2>✅ Your next steps</h2>
-      <div class="card">${firstOpen.length ? firstOpen.map(x => `<label class="check"><input type="checkbox" data-plan="${x.k}"><span>${esc(x.it)}</span></label>`).join("") : "<p>Plan complete. Keep revising with the quizzes.</p>"}
-        <p><a href="#/plan">See the full plan →</a></p></div>
+      <h2 class="sec">📚 Pick a module</h2>
+      ${moduleGrid()}
 
-      <h2>📚 Modules</h2>
-      <div class="grid">${D.modules.map(m => {
-        const p = modProgress(m); const best = state.quiz[m.id];
-        return `<a class="card mcard" href="#/m/${m.id}"><span class="ic">${m.icon}</span><h3>${esc(m.name)}</h3>
-          <p>${esc(prof(m))}</p>
-          <div class="bar"><i style="width:${p.pct}%"></i></div>
-          <p>${p.done}/${p.total} lessons · quiz best: ${best != null ? best + "%" : "—"}</p></a>`;
-      }).join("")}</div>
-      <p class="muted small" style="margin-top:28px">⚠️ Unofficial guide made by students, for students. Always double-check dates and requirements with your professors. Found a mistake? <a href="https://github.com/hatimOtaku/S5-guide/issues" target="_blank" rel="noopener">Report it on GitHub</a>.</p>`;
+      <h2 class="sec">🧰 Resources</h2>
+      <div class="quick">${quick.map(([h, i, t, d]) => `<a class="qcard" href="${h}"><span>${i}</span><b>${t}</b><small>${d}</small></a>`).join("")}</div>
+
+      <p class="muted small" style="margin-top:28px">⚠️ Unofficial guide made by students, for students. Always double-check with your professors. Found a mistake? <a href="https://github.com/hatimOtaku/S5-guide/issues" target="_blank" rel="noopener">Report it on GitHub</a>.</p>`;
+  }
+
+  function modulesPage() {
+    return `<h1>📚 Modules</h1><p class="lead">Pick a module: lessons, videos, quiz, exercises with model answers and exam tips.</p>${moduleGrid()}`;
   }
 
   function moduleView(id, tab) {
@@ -213,16 +236,18 @@
       body = `<div class="card"><ul>${m.tips.map(x => `<li style="margin:8px 0">${esc(x)}</li>`).join("")}</ul></div>`;
     }
     return `
-      <a href="#/" class="pill">← Dashboard</a>
-      <h1 style="margin-top:10px">${m.icon} ${esc(m.name)}</h1>
-      <p class="lead ${m.rtl ? "rtl" : ""}">${esc(m.summary)}</p>
+      <section class="mod-head" style="--c:${m.color}">
+        <a href="#/modules" class="back">← Modules</a>
+        <div class="mh-row"><span class="mh-ic">${m.icon}</span><h1>${esc(m.name)}</h1></div>
+        <p class="lead ${m.rtl ? "rtl" : ""}">${esc(m.summary)}</p>
+      </section>
       <div class="meta">
         <div><b>Professor</b>${esc(prof(m))}</div>
         <div><b>When</b>${esc(slot(m)) || "—"}</div>
         <div><b>Progress</b>${p.done}/${p.total} lessons<div class="bar"><i style="width:${p.pct}%"></i></div></div>
       </div>
       <div class="callout"><b>Where to find the official material:</b> ${m.materials}</div>
-      <div class="tabs">${tabs.map(([k, l]) => `<button data-tab="${k}" class="${k === tab ? "active" : ""}">${l}</button>`).join("")}</div>
+      <div class="tabs" style="--c:${m.color}">${tabs.map(([k, l]) => `<button data-tab="${k}" class="${k === tab ? "active" : ""}">${l}</button>`).join("")}</div>
       ${body}`;
   }
 
@@ -297,19 +322,24 @@
   }
 
   function search(q) {
-    const t = q.toLowerCase().trim(); if (!t) return home();
+    return `<h1>🔎 Search</h1>
+      <input id="bigSearch" class="big-search" type="search" placeholder="Try: morpheme, Krashen, X-bar, APA…" value="${esc(q)}" autocomplete="off">
+      <div id="sres">${searchResults(q)}</div>`;
+  }
+  function searchResults(q) {
+    const t = q.toLowerCase().trim();
+    if (!t) return `<p class="muted">Search every lesson and all ${G.length} key terms.</p>`;
     const hits = [];
     const re = new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "gi");
     D.modules.forEach(m => m.lessons.forEach((l, i) => {
       const txt = plainText(l.body); const at = txt.toLowerCase().indexOf(t);
       if (l.title.toLowerCase().includes(t) || at >= 0) {
         const s = at >= 0 ? txt.slice(Math.max(0, at - 60), at + 100) : txt.slice(0, 140);
-        hits.push(`<a class="card mcard" href="#/m/${m.id}/lessons/${i}"><h3>${m.icon} ${esc(l.title)}</h3><p>${esc(m.name)}</p><p>…${esc(s).replace(re, x => `<mark>${x}</mark>`)}…</p></a>`);
+        hits.push(`<a class="card hit" style="--c:${m.color}" href="#/m/${m.id}/lessons/${i}"><h3>${m.icon} ${esc(l.title)}</h3><small>${esc(m.name)}</small><p>…${esc(s).replace(re, x => `<mark>${x}</mark>`)}…</p></a>`);
       }
     }));
     const gl = G.filter(g => (g.t + " " + g.d).toLowerCase().includes(t));
-    return `<h1>Search: “${esc(q)}”</h1>
-      <h2>Lessons (${hits.length})</h2><div class="grid">${hits.join("") || "<p>No lesson matches.</p>"}</div>
+    return `<h2>Lessons (${hits.length})</h2><div class="grid">${hits.join("") || "<p>No lesson matches.</p>"}</div>
       <h2>Glossary (${gl.length})</h2><div class="card">${gl.map(g => `<div class="term"><b>${esc(g.t)}</b> <span class="pill">${esc(modById[g.m].short)}</span><br>${esc(g.d)}
         <div class="term-actions">${g.url ? `<a href="${g.url}" target="_blank" rel="noopener">Learn more ↗</a>` : ""}${g.lesson != null ? `<a href="#/m/${g.m}/lessons/${g.lesson}">Go to lesson →</a>` : ""}</div></div>`).join("") || "<p>No term matches.</p>"}</div>`;
   }
@@ -325,12 +355,13 @@
       html = moduleView(parts[1], parts[2]);
       if (parts[2] === "lessons" && parts[3]) after = () => { const d = $("#l" + parts[3]); if (d) { d.open = true; d.scrollIntoView({ behavior: "smooth" }); } };
     }
+    else if (parts[0] === "modules") html = modulesPage();
     else if (parts[0] === "plan") html = plan();
     else if (parts[0] === "timetable") html = timetable();
     else if (parts[0] === "glossary") { html = glossary(); after = fillGlossary; }
     else if (parts[0] === "exam") html = exam();
     else if (parts[0] === "about") html = about();
-    else if (parts[0] === "search") html = search(decodeURIComponent(parts.slice(1).join("/")));
+    else if (parts[0] === "search") { html = search(decodeURIComponent(parts.slice(1).join("/"))); after = () => { const b = $("#bigSearch"); if (b) { b.focus(); b.setSelectionRange(b.value.length, b.value.length); } window.scrollTo(0, 0); }; }
     else html = notFound();
     app.innerHTML = html;
     app.querySelectorAll(".lesson-body, .lead").forEach(linkTerms);
@@ -384,13 +415,15 @@
       $("#retry").onclick = route;
     }
     if (parts[0] === "glossary") { $("#glq").oninput = fillGlossary; $("#glf").onchange = fillGlossary; }
+    const bs = $("#bigSearch");
+    if (bs) { let t; bs.oninput = () => { clearTimeout(t); t = setTimeout(() => { $("#sres").innerHTML = searchResults(bs.value); $("#sres").querySelectorAll(".card").forEach(linkTerms); history.replaceState(null, "", "#/search/" + encodeURIComponent(bs.value)); }, 200); }; }
   }
 
   /* ---------- global search ---------- */
   let st;
   $("#globalSearch").addEventListener("input", e => {
     clearTimeout(st); const v = e.target.value;
-    st = setTimeout(() => { location.hash = v.trim() ? "#/search/" + encodeURIComponent(v) : "#/"; }, 250);
+    st = setTimeout(() => { if (location.hash.startsWith("#/search") && $("#bigSearch")) { $("#bigSearch").value = v; $("#bigSearch").dispatchEvent(new Event("input")); } else location.hash = "#/search/" + encodeURIComponent(v); }, 250);
   });
 
   addEventListener("hashchange", route);

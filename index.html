@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>S5 Guide — Zero to Hero</title>
 <meta name="description" content="Free S5 English Studies (Linguistics) study guide: every module explained from zero, with videos, clickable key terms, quizzes, exercises with model answers and a study plan.">
 <meta property="og:title" content="S5 Guide — Zero to Hero">
@@ -10,10 +10,33 @@
 <meta name="theme-color" content="#4f46e5">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800;900&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+<!-- intro animation (~1.5 s, once per visit) -->
+<div id="splash" aria-hidden="true">
+  <div class="splash-inner">
+    <div class="splash-logo"><span>S5</span></div>
+    <div class="splash-title"><span>G</span><span>u</span><span>i</span><span>d</span><span>e</span></div>
+    <div class="splash-sub">zero → hero</div>
+    <div class="splash-bar"><i></i></div>
+  </div>
+</div>
+<script>
+  (function () {
+    var s = document.getElementById("splash"), seen = false;
+    try { seen = sessionStorage.getItem("s5splash") === "1"; sessionStorage.setItem("s5splash", "1"); } catch (e) {}
+    if (seen || matchMedia("(prefers-reduced-motion: reduce)").matches) { s.remove(); return; }
+    document.documentElement.classList.add("splashing");
+    setTimeout(function () { s.classList.add("out"); document.documentElement.classList.remove("splashing"); }, 1500);
+    setTimeout(function () { s.remove(); }, 2000);
+    s.addEventListener("click", function () { s.classList.add("out"); setTimeout(function () { s.remove(); }, 400); });
+  })();
+</script>
+
+<div class="bg-blobs" aria-hidden="true"><i></i><i></i><i></i></div>
+
 <header class="topbar">
   <button class="menu-btn" id="menuBtn" aria-label="Open menu">☰</button>
   <a href="#/" class="brand"><span class="logo">S5</span><span>Guide <small>zero → hero</small></span></a>
@@ -33,19 +56,30 @@
       </select>
     </label>
     <div class="nav-group">
-      <a href="#/" data-route="home">🏠 Dashboard</a>
+      <a href="#/" data-route="home">🏠 Home</a>
+      <a href="#/modules" data-route="modules">📚 All modules</a>
       <a href="#/plan" data-route="plan">🗺️ Study plan</a>
-      <a href="#/timetable" data-route="timetable">🗓️ Timetable & dates</a>
+      <a href="#/timetable" data-route="timetable">🗓️ Timetable</a>
       <a href="#/glossary" data-route="glossary">📖 Glossary</a>
-      <a href="#/exam" data-route="exam">📝 Top-marks method</a>
+      <a href="#/exam" data-route="exam">🏆 Top-marks method</a>
     </div>
     <div class="nav-label">Modules</div>
     <div class="nav-group" id="moduleNav"></div>
     <div class="nav-group" style="margin-top:12px"><a href="#/about" data-route="about">ℹ️ About this guide</a></div>
     <div class="nav-foot">Progress is saved in this browser only.<br><button id="resetBtn" class="link-btn">Reset my progress</button></div>
   </nav>
+  <div id="scrim" class="scrim" hidden></div>
   <main id="app" tabindex="-1"></main>
 </div>
+
+<!-- mobile bottom tab bar -->
+<nav class="tabbar" aria-label="Quick navigation">
+  <a href="#/" data-route="home"><span>🏠</span>Home</a>
+  <a href="#/modules" data-route="modules"><span>📚</span>Modules</a>
+  <a href="#/search" data-route="search"><span>🔎</span>Search</a>
+  <a href="#/glossary" data-route="glossary"><span>📖</span>Terms</a>
+  <button id="moreBtn" type="button"><span>☰</span>More</button>
+</nav>
 
 <script src="data.js"></script>
 <script src="modules/morphology.js"></script>
