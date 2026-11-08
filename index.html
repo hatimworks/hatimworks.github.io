@@ -4,7 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>S5 Guide — Zero to Hero</title>
-<meta name="description" content="S5 English Studies (Linguistics) study guide: lessons, quizzes, exercises and a study plan for every module.">
+<meta name="description" content="Free S5 English Studies (Linguistics) study guide: every module explained from zero, with videos, clickable key terms, quizzes, exercises with model answers and a study plan.">
+<meta property="og:title" content="S5 Guide — Zero to Hero">
+<meta property="og:description" content="Missed the semester? Every S5 Linguistics module explained from zero: videos, quizzes, model answers and a study plan.">
+<meta name="theme-color" content="#4f46e5">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
@@ -22,21 +25,36 @@
 
 <div class="layout">
   <nav class="sidebar" id="sidebar" aria-label="Main">
+    <label class="group-pick">My group
+      <select id="groupSel" aria-label="Select your group">
+        <option value="">Both groups</option>
+        <option value="g1">Group 1</option>
+        <option value="g2">Group 2</option>
+      </select>
+    </label>
     <div class="nav-group">
       <a href="#/" data-route="home">🏠 Dashboard</a>
       <a href="#/plan" data-route="plan">🗺️ Study plan</a>
       <a href="#/timetable" data-route="timetable">🗓️ Timetable & dates</a>
       <a href="#/glossary" data-route="glossary">📖 Glossary</a>
-      <a href="#/exam" data-route="exam">📝 Exam method</a>
+      <a href="#/exam" data-route="exam">📝 Top-marks method</a>
     </div>
     <div class="nav-label">Modules</div>
     <div class="nav-group" id="moduleNav"></div>
-    <div class="nav-foot">Progress is saved in this browser.<br><button id="resetBtn" class="link-btn">Reset progress</button></div>
+    <div class="nav-group" style="margin-top:12px"><a href="#/about" data-route="about">ℹ️ About this guide</a></div>
+    <div class="nav-foot">Progress is saved in this browser only.<br><button id="resetBtn" class="link-btn">Reset my progress</button></div>
   </nav>
   <main id="app" tabindex="-1"></main>
 </div>
 
 <script src="data.js"></script>
+<script src="modules/morphology.js"></script>
+<script src="modules/phonology.js"></script>
+<script src="modules/syntax.js"></script>
+<script src="modules/semantics.js"></script>
+<script src="modules/tta.js"></script>
+<script src="modules/digital.js"></script>
+<script src="modules/arabic.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

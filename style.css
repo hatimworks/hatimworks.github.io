@@ -100,7 +100,7 @@ th{background:var(--surface2);font-weight:600}
 
 /* lessons */
 details.lesson{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin:10px 0;box-shadow:var(--shadow)}
-details.lesson summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;gap:10px;font-weight:600}
+details.lesson summary{list-style:none;cursor:pointer;padding:14px 16px;display:flex;align-items:center;gap:10px;font-weight:600;flex-wrap:wrap}
 details.lesson summary::-webkit-details-marker{display:none}
 details.lesson summary::before{content:"▸";color:var(--muted);transition:transform .15s}
 details.lesson[open] summary::before{transform:rotate(90deg)}
@@ -136,6 +136,42 @@ details.lesson.done summary{color:var(--ok)}
 .term{padding:12px 0;border-bottom:1px solid var(--border)}
 .term b{font-size:16px}
 mark{background:#fde68a;color:#1b1f2a;border-radius:3px}
+
+/* group picker */
+.group-pick{display:flex;flex-direction:column;gap:4px;margin:0 6px 14px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+.group-pick select{padding:8px 10px;border:1px solid var(--border);border-radius:10px;background:var(--surface2);color:var(--text);font:inherit;font-size:15px;text-transform:none;letter-spacing:0;font-weight:600}
+.pick{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:18px;border-color:var(--accent)}
+.muted{color:var(--muted)} .small{font-size:14px}
+.btn.sm{padding:6px 12px;font-size:14px}
+
+/* videos */
+.watch{margin-top:18px;padding-top:12px;border-top:1px dashed var(--border);direction:ltr;text-align:left;font-family:Inter,system-ui,sans-serif;font-size:16px}
+.watch h4{margin-top:0}
+.vgrid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));margin:8px 0}
+.vgrid.big{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.vcard{display:flex;flex-direction:column;text-decoration:none;color:var(--text);background:var(--surface2);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:transform .15s,border-color .15s}
+.vcard:hover{transform:translateY(-2px);border-color:var(--accent)}
+.vcard img{width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--border);display:block}
+.vmeta{padding:8px 10px;display:flex;flex-direction:column;gap:2px}
+.vmeta b{font-size:14px;line-height:1.35}
+.vmeta small{color:var(--muted);font-size:12.5px}
+.ma{display:inline-block;background:#0f7a3a;color:#fff;font-size:11px;font-weight:700;padding:1px 7px;border-radius:999px;margin-right:4px;vertical-align:1px}
+.ytsearch{display:inline-block;margin-top:6px;font-size:14px}
+
+/* clickable terms */
+.term-link{all:unset;cursor:pointer;color:inherit;border-bottom:2px dotted var(--accent);font-weight:inherit}
+.term-link:hover,.term-link:focus-visible{background:var(--accent-soft);color:var(--accent)}
+.term-link.demo{cursor:default}
+.term-pop{position:absolute;z-index:50;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:0 10px 40px rgba(0,0,0,.18)}
+.term-pop p{margin:8px 0 10px;font-size:15px}
+.pop-actions{display:flex;flex-wrap:wrap;gap:6px}
+.pop-x{position:absolute;top:6px;right:8px;border:none;background:none;color:var(--muted);font-size:20px;cursor:pointer}
+.term-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:4px;font-size:14px}
+
+/* model answers */
+details.answer{margin-top:10px;border:1px solid var(--border);border-radius:10px;background:var(--surface2)}
+details.answer summary{cursor:pointer;padding:8px 12px;font-weight:600;color:var(--accent)}
+details.answer .lesson-body{border-top:1px solid var(--border);padding-top:10px}
 
 /* responsive */
 @media (max-width: 860px){

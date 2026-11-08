@@ -1,25 +1,28 @@
 # S5 Guide — Zero to Hero
 
-A study website for **S5 English Studies (Linguistics, Group 1), Université Ibn Tofail, 2026/2027**.
+**Live site: https://hatimotaku.github.io/S5-guide/**
 
-Open `index.html` in a browser (or enable GitHub Pages). It has no build step and no dependencies.
+A free, unofficial study guide for **S5 English Studies — Linguistics** (FLLA Kénitra, Université Ibn Tofail, 2026/2027). It's built for students who missed classes and want to catch up and aim for top marks.
 
 ## What's inside
-- **Dashboard:** overall progress, upcoming deadlines and your next steps
-- **Study plan:** a week-by-week checklist, from catching up to exam mode
-- **7 modules:** Morphology, Phonology, Syntax, Semantics, Teaching Theories & Approaches, Digital Skills, Arabic. Each one has:
-  - Lessons explained from scratch (tick each one as "learned")
-  - An interactive quiz with instant feedback (your best score is saved)
-  - Exam-style exercises
-  - Exam tips
-- **Timetable & key dates**
-- **Glossary:** searchable, filterable by module
-- **Exam method:** how to answer definition, comparison, data-analysis, tree and essay questions
+- **7 modules:** Morphology, Phonology, Syntax, Semantics, Teaching Theories & Approaches, Digital Skills, Arabic. Each module has:
+  - lessons explained from zero
+  - videos for every lesson, with Moroccan educators first
+  - an interactive quiz with instant feedback
+  - exam-style exercises with **model answers**
+  - exam tips
+- **Clickable key terms:** dotted words open a definition, a "learn more" link and a YouTube search
+- **Group 1 / Group 2 switch:** your timetable, professors and deadlines
+- **Study plan:** from "I never attended" to exam-ready
+- **Glossary:** 180+ terms
+- **Top-marks method:** how to answer each question type
 
-Your progress is stored in your browser's localStorage.
+Your progress (lessons ticked, quiz scores, plan) is saved only in your own browser.
 
-## Files
-- `index.html`: the page shell
-- `style.css`: styles, with light and dark themes
-- `data.js`: all the course content (edit it to add notes)
-- `app.js`: routing, progress tracking, quizzes and search
+## Found a mistake or a missing topic?
+Open an issue on this repository or tell the class group. Always double-check dates and requirements with your professors.
+
+## Structure
+- `index.html`, `style.css`, `app.js`: the site (no build step)
+- `data.js`: timetable, deadlines, study plan, glossary
+- `modules/*.js`: one file per module (lessons, videos, quiz, exercises)
