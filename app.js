@@ -188,7 +188,7 @@
       <h2 class="sec">🧰 Resources</h2>
       <div class="quick">${quick.map(([h, i, t, d]) => `<a class="qcard" href="${h}"><span>${i}</span><b>${t}</b><small>${d}</small></a>`).join("")}</div>
 
-      <p class="muted small" style="margin-top:28px">⚠️ Unofficial guide made by students, for students. Always double-check with your professors. Found a mistake? <a href="https://github.com/hatimworks/hatimworks.github.io/issues" target="_blank" rel="noopener">Report it on GitHub</a>.</p>`;
+      <p class="muted small" style="margin-top:28px">⚠️ Unofficial guide made by students, for students. Always double-check with your professors. Found a mistake? Tell the class group.</p>`;
   }
 
   function modulesPage() {
@@ -317,7 +317,7 @@
       <li><b>Videos:</b> real YouTube videos picked for each lesson. Moroccan educators (green “Moroccan” badge) come first when a good one exists; otherwise, well-known international channels. Every lesson also has a “more videos” search link.</li>
       <li><b>Clickable terms:</b> dotted words open a definition with a “learn more” link (mostly Wikipedia) and a YouTube search.</li>
       <li><b>Your progress</b> (lessons ticked, quiz scores, plan) is saved only in your own browser. Nothing is sent anywhere.</li>
-      <li><b>Mistakes or missing topics?</b> <a href="https://github.com/hatimworks/hatimworks.github.io/issues" target="_blank" rel="noopener">Open an issue on GitHub</a> or tell the class group.</li></ul>
+      <li><b>Mistakes or missing topics?</b> Tell the class group so it can be fixed.</li></ul>
       <p class="muted">⚠️ Always double-check dates, exam formats and requirements with your professors; they have the final word.</p></div>`;
   }
 

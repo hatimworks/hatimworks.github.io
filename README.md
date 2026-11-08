@@ -20,7 +20,7 @@ A free, unofficial study guide for **S5 English Studies — Linguistics** (FLLA 
 Your progress (lessons ticked, quiz scores, plan) is saved only in your own browser.
 
 ## Found a mistake or a missing topic?
-Open an issue on this repository or tell the class group. Always double-check dates and requirements with your professors.
+Tell the class group. Always double-check dates and requirements with your professors.
 
 ## Structure
 - `index.html`, `style.css`, `app.js`: the site (no build step)
