@@ -1,6 +1,6 @@
 # S5 Guide — Zero to Hero
 
-**Live site: https://hatimotaku.github.io/S5-guide/**
+**Live site: https://hatimworks.github.io/**
 
 A free, unofficial study guide for **S5 English Studies — Linguistics** (FLLA Kénitra, Université Ibn Tofail, 2026/2027). It's built for students who missed classes and want to catch up and aim for top marks.
 
